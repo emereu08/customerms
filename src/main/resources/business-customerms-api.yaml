@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: Aplicación de clientes del banco.
+  description: API para registrar, consultar, modificar y eliminar clientes del bancos.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+paths:
+  /clientes:
+    get:
+      summary: Listar objectos de tipo cliente
+      operationId: listarClientes
+      description: Devuelve una lista de todos los objetos tipo cliente
+      responses:
+        '200':
+          description: Lista de objetos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClienteResponse'
+        '204':
+          description: No hay objetos clientes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "No se encontraron objetos tipo cliente"
+    post:
+      summary: Registro de cliente
+      operationId: agregarCliente
+      description: Devuelve un objeto con todos los datos registrados y el id generado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteRequest'
+      responses:
+        '200':
+          description: Objecto cuenta con id generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClienteResponse'
+        '400':
+          description: Error en la solicitud.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Solicitud inválida."
+  /clientes/{id}:
+    get:
+      summary: Ojecto de tipo cliente
+      operationId: consultarCliente
+      description: Devuelve un objeto tipo cliente
+      parameters:
+        - name: id
+          in: path
+          description: Customer ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Objeto tipo cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClienteResponse'
+        '204':
+          description: No hay objetos clientes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "No se encontraron objetos tipo cliente"
+    put:
+      summary: Actualizar objeto cliente
+      operationId: actualizarCliente
+      description: Actualizar un objeto tipo cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteRequest'
+      parameters:
+        - name: id
+          in: path
+          description: Customer ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Objecto cliente con id generado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClienteResponse'
+        '400':
+          description: Error en la solicitud.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Solicitud inválida."
+    delete:
+      summary: Eliminar objeto cliente
+      operationId: eliminarClientePorId
+      description: Eliminar un objeto tipo cliente
+      parameters:
+        - name: id
+          in: path
+          description: Customer ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: BAD REQUEST
+        '404':
+          description: NOT FOUND
+components:
+  schemas:
+    ClienteRequest:
+      type: object
+      properties:
+        nombre:
+          type: string
+        apellido:
+          type: string
+        dni:
+          type: string
+        email:
+          type: string
+    ClienteResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        apellido:
+          type: string
+        dni:
+          type: string
+        email:
+          type: string
